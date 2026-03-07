@@ -20,7 +20,7 @@ Example file: `.github/prompts/explain-code.prompt.md`
 ### Custom Instructions
 
 1. Repo-wide instructions — create `.github/copilot-instructions.md`
-2. Scoped instructions — example: `.github/instructions/hello.instructions.md`
+2. Scoped instructions — example: `.github/instructions/comment.instructions.md`
 
 ### References
 
