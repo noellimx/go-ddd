@@ -45,15 +45,15 @@
 ### T1.6 Write tests for ProductController
 - [ ] T1.6.1 Create `internal/interface/api/rest/product_controller_test.go`
 - [ ] T1.6.2 Define `mockProductService` implementing `interfaces.ProductService` with controllable return values
-- [ ] T1.6.3 Test `CreateProductController`: happy path → 201
-- [ ] T1.6.4 Test `CreateProductController`: malformed JSON → 400
-- [ ] T1.6.5 Test `CreateProductController`: service error → 500
-- [ ] T1.6.6 Test `GetAllProductsController`: happy path → 200
-- [ ] T1.6.7 Test `GetAllProductsController`: service error → 500
-- [ ] T1.6.8 Test `GetProductByIdController`: happy path → 200
-- [ ] T1.6.9 Test `GetProductByIdController`: invalid UUID → 400
-- [ ] T1.6.10 Test `GetProductByIdController`: not found → 404
-- [ ] T1.6.11 Test `GetProductByIdController`: service error → 500
+- [ ] T1.6.3 Test `CreateProductController`: malformed JSON → 400
+- [ ] T1.6.4 Test `CreateProductController`: service error → 500
+- [ ] T1.6.5 Test `CreateProductController`: happy path → 201
+- [ ] T1.6.6 Test `GetAllProductsController`: service error → 500
+- [ ] T1.6.7 Test `GetAllProductsController`: happy path → 200
+- [ ] T1.6.8 Test `GetProductByIdController`: invalid UUID → 400
+- [ ] T1.6.9 Test `GetProductByIdController`: not found → 404
+- [ ] T1.6.10 Test `GetProductByIdController`: service error → 500
+- [ ] T1.6.11 Test `GetProductByIdController`: happy path → 200
 
 ---
 
@@ -98,21 +98,21 @@
 ### T2.7 Write tests for SellerController
 - [ ] T2.7.1 Create `internal/interface/api/rest/seller_controller_test.go`
 - [ ] T2.7.2 Define `mockSellerService` implementing `interfaces.SellerService` with controllable return values
-- [ ] T2.7.3 Test `CreateSellerController`: happy path → 201
-- [ ] T2.7.4 Test `CreateSellerController`: malformed JSON → 400
-- [ ] T2.7.5 Test `CreateSellerController`: service error → 500
-- [ ] T2.7.6 Test `GetAllSellersController`: happy path → 200
-- [ ] T2.7.7 Test `GetAllSellersController`: service error → 500
-- [ ] T2.7.8 Test `GetSellerByIdController`: happy path → 200
-- [ ] T2.7.9 Test `GetSellerByIdController`: invalid UUID → 400
-- [ ] T2.7.10 Test `GetSellerByIdController`: not found → 404
-- [ ] T2.7.11 Test `GetSellerByIdController`: service error → 500
-- [ ] T2.7.12 Test `PutSellerController`: happy path → 200
-- [ ] T2.7.13 Test `PutSellerController`: malformed JSON → 400
-- [ ] T2.7.14 Test `PutSellerController`: service error → 500
-- [ ] T2.7.15 Test `DeleteSellerController`: happy path → 204
-- [ ] T2.7.16 Test `DeleteSellerController`: invalid UUID → 400
-- [ ] T2.7.17 Test `DeleteSellerController`: service error → 500
+- [ ] T2.7.3 Test `CreateSellerController`: malformed JSON → 400
+- [ ] T2.7.4 Test `CreateSellerController`: service error → 500
+- [ ] T2.7.5 Test `CreateSellerController`: happy path → 201
+- [ ] T2.7.6 Test `GetAllSellersController`: service error → 500
+- [ ] T2.7.7 Test `GetAllSellersController`: happy path → 200
+- [ ] T2.7.8 Test `GetSellerByIdController`: invalid UUID → 400
+- [ ] T2.7.9 Test `GetSellerByIdController`: not found → 404
+- [ ] T2.7.10 Test `GetSellerByIdController`: service error → 500
+- [ ] T2.7.11 Test `GetSellerByIdController`: happy path → 200
+- [ ] T2.7.12 Test `PutSellerController`: malformed JSON → 400
+- [ ] T2.7.13 Test `PutSellerController`: service error → 500
+- [ ] T2.7.14 Test `PutSellerController`: happy path → 200
+- [ ] T2.7.15 Test `DeleteSellerController`: invalid UUID → 400
+- [ ] T2.7.16 Test `DeleteSellerController`: service error → 500
+- [ ] T2.7.17 Test `DeleteSellerController`: happy path → 204
 
 ---
 
