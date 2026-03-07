@@ -1,14 +1,16 @@
 package rest
 
 import (
-	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"net/http"
+
 	"github.com/noellimx/go-ddd/internal/application/interfaces"
 	"github.com/noellimx/go-ddd/internal/application/query"
 	"github.com/noellimx/go-ddd/internal/interface/api/rest/dto/mapper"
 	"github.com/noellimx/go-ddd/internal/interface/api/rest/dto/request"
-	"net/http"
+
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type ProductController struct {

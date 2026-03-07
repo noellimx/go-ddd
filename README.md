@@ -165,7 +165,7 @@ This will create two files:
 ```bash
 git clone https://github.com/sklinkert/go-ddd.git
 cd go-ddd
-go mod download
+go mod tidy
 ```
 
 2. Install sqlc (for development):
