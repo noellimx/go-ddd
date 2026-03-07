@@ -13,7 +13,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
 
-	db "github.com/sklinkert/go-ddd/internal/infrastructure/db/sqlc"
+	db "github.com/noellimx/go-ddd/internal/infrastructure/db/sqlc"
 )
 
 const (

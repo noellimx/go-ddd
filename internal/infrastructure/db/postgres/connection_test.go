@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sklinkert/go-ddd/internal/testhelpers"
+	"github.com/noellimx/go-ddd/internal/testhelpers"
 )
 
 func TestNewConnection(t *testing.T) {

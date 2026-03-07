@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"github.com/sklinkert/go-ddd/internal/application/common"
-	"github.com/sklinkert/go-ddd/internal/interface/api/rest/dto/response"
+	"github.com/noellimx/go-ddd/internal/application/common"
+	"github.com/noellimx/go-ddd/internal/interface/api/rest/dto/response"
 )
 
 func ToProductResponse(product *common.ProductResult) *response.ProductResponse {

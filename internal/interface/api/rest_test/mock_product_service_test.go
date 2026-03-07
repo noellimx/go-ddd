@@ -1,10 +1,10 @@
 package rest_test
 
 import (
-	"github.com/sklinkert/go-ddd/internal/application/command"
-	"github.com/sklinkert/go-ddd/internal/application/mapper"
-	"github.com/sklinkert/go-ddd/internal/application/query"
-	"github.com/sklinkert/go-ddd/internal/domain/entities"
+	"github.com/noellimx/go-ddd/internal/application/command"
+	"github.com/noellimx/go-ddd/internal/application/mapper"
+	"github.com/noellimx/go-ddd/internal/application/query"
+	"github.com/noellimx/go-ddd/internal/domain/entities"
 	"github.com/stretchr/testify/mock"
 	"time"
 )

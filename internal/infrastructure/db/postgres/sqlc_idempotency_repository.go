@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/sklinkert/go-ddd/internal/domain/entities"
-	"github.com/sklinkert/go-ddd/internal/domain/repositories"
-	db "github.com/sklinkert/go-ddd/internal/infrastructure/db/sqlc"
+	"github.com/noellimx/go-ddd/internal/domain/entities"
+	"github.com/noellimx/go-ddd/internal/domain/repositories"
+	db "github.com/noellimx/go-ddd/internal/infrastructure/db/sqlc"
 )
 
 type SqlcIdempotencyRepository struct {

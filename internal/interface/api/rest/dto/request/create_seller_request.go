@@ -1,6 +1,6 @@
 package request
 
-import "github.com/sklinkert/go-ddd/internal/application/command"
+import "github.com/noellimx/go-ddd/internal/application/command"
 
 type CreateSellerRequest struct {
 	IdempotencyKey string `json:"idempotency_key"`

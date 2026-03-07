@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 
-	"github.com/sklinkert/go-ddd/internal/domain/entities"
+	"github.com/noellimx/go-ddd/internal/domain/entities"
 )
 
 type IdempotencyRepository interface {

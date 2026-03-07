@@ -1,8 +1,8 @@
 package interfaces
 
 import (
-	"github.com/sklinkert/go-ddd/internal/application/command"
-	"github.com/sklinkert/go-ddd/internal/application/query"
+	"github.com/noellimx/go-ddd/internal/application/command"
+	"github.com/noellimx/go-ddd/internal/application/query"
 )
 
 type SellerService interface {

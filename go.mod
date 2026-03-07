@@ -1,4 +1,4 @@
-module github.com/sklinkert/go-ddd
+module github.com/noellimx/go-ddd
 
 go 1.26.0
 

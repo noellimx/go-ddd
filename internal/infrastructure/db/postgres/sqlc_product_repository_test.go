@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sklinkert/go-ddd/internal/domain/entities"
-	"github.com/sklinkert/go-ddd/internal/testhelpers"
+	"github.com/noellimx/go-ddd/internal/domain/entities"
+	"github.com/noellimx/go-ddd/internal/testhelpers"
 )
 
 func TestSqlcProductRepository_Create(t *testing.T) {

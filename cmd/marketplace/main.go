@@ -5,9 +5,9 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
-	"github.com/sklinkert/go-ddd/internal/application/services"
-	"github.com/sklinkert/go-ddd/internal/infrastructure/db/postgres"
-	"github.com/sklinkert/go-ddd/internal/interface/api/rest"
+	"github.com/noellimx/go-ddd/internal/application/services"
+	"github.com/noellimx/go-ddd/internal/infrastructure/db/postgres"
+	"github.com/noellimx/go-ddd/internal/interface/api/rest"
 )
 
 func main() {

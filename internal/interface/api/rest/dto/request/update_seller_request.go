@@ -2,7 +2,7 @@ package request
 
 import (
 	"github.com/google/uuid"
-	"github.com/sklinkert/go-ddd/internal/application/command"
+	"github.com/noellimx/go-ddd/internal/application/command"
 )
 
 type UpdateSellerRequest struct {

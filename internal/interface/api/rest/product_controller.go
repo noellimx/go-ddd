@@ -4,10 +4,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/sklinkert/go-ddd/internal/application/interfaces"
-	"github.com/sklinkert/go-ddd/internal/application/query"
-	"github.com/sklinkert/go-ddd/internal/interface/api/rest/dto/mapper"
-	"github.com/sklinkert/go-ddd/internal/interface/api/rest/dto/request"
+	"github.com/noellimx/go-ddd/internal/application/interfaces"
+	"github.com/noellimx/go-ddd/internal/application/query"
+	"github.com/noellimx/go-ddd/internal/interface/api/rest/dto/mapper"
+	"github.com/noellimx/go-ddd/internal/interface/api/rest/dto/request"
 	"net/http"
 )
 

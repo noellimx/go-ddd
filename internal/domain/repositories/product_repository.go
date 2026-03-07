@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"github.com/google/uuid"
-	"github.com/sklinkert/go-ddd/internal/domain/entities"
+	"github.com/noellimx/go-ddd/internal/domain/entities"
 )
 
 type ProductRepository interface {
