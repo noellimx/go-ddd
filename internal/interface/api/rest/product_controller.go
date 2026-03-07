@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/noellimx/go-ddd/internal/application/interfaces"
@@ -9,90 +10,90 @@ import (
 	"github.com/noellimx/go-ddd/internal/interface/api/rest/dto/request"
 
 	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 type ProductController struct {
 	service interfaces.ProductService
 }
 
-func NewProductController(e *echo.Echo, service interfaces.ProductService) *ProductController {
+func NewProductController(service interfaces.ProductService) *ProductController {
 	controller := &ProductController{
 		service: service,
 	}
 
-	e.POST("/api/v1/products", controller.CreateProductController)
-	e.GET("/api/v1/products", controller.GetAllProductsController)
-	e.GET("/api/v1/products/:id", controller.GetProductByIdController)
-	e.Use(middleware.Recover())
-
 	return controller
 }
 
-func (pc *ProductController) CreateProductController(c echo.Context) error {
+func (pc *ProductController) CreateProductController(w http.ResponseWriter, r *http.Request) {
 	var createProductRequest request.CreateProductRequest
 
-	if err := c.Bind(&createProductRequest); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{
+	if err := json.NewDecoder(r.Body).Decode(&createProductRequest); err != nil {
+		WriteJSON(w, http.StatusBadRequest, map[string]string{
 			"error": "Failed to parse request body",
 		})
+		return
 	}
 
 	productCommand, err := createProductRequest.ToCreateProductCommand()
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{
+		WriteJSON(w, http.StatusBadRequest, map[string]string{
 			"error": "Invalid product Id format",
 		})
+		return
 	}
 
 	result, err := pc.service.CreateProduct(productCommand)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
+		WriteJSON(w, http.StatusInternalServerError, map[string]string{
 			"error": "Failed to create product",
 		})
+		return
 	}
 
 	response := mapper.ToProductResponse(result.Result)
 
-	return c.JSON(http.StatusCreated, response)
+	WriteJSON(w, http.StatusCreated, response)
 }
 
-func (pc *ProductController) GetAllProductsController(c echo.Context) error {
+func (pc *ProductController) GetAllProductsController(w http.ResponseWriter, r *http.Request) {
 	products, err := pc.service.FindAllProducts()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
+		WriteJSON(w, http.StatusInternalServerError, map[string]string{
 			"error": "Failed to fetch products",
 		})
+		return
 	}
 
 	response := mapper.ToProductListResponse(products.Result)
 
-	return c.JSON(http.StatusOK, response)
+	WriteJSON(w, http.StatusOK, response)
 }
 
-func (pc *ProductController) GetProductByIdController(c echo.Context) error {
-	id, err := uuid.Parse(c.Param("id"))
+func (pc *ProductController) GetProductByIdController(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(r.PathValue("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{
+		WriteJSON(w, http.StatusBadRequest, map[string]string{
 			"error": "Invalid product Id format",
 		})
+		return
 	}
 
 	product, err := pc.service.FindProductById(&query.GetProductByIdQuery{Id: id})
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
+		WriteJSON(w, http.StatusInternalServerError, map[string]string{
 			"error": "Failed to fetch product",
 		})
+		return
 	}
 
 	if product == nil {
-		return c.JSON(http.StatusNotFound, map[string]string{
+		WriteJSON(w, http.StatusNotFound, map[string]string{
 			"error": "Product not found",
 		})
+		return
 	}
 
 	response := mapper.ToProductResponse(product.Result)
 
-	return c.JSON(http.StatusOK, response)
+	WriteJSON(w, http.StatusOK, response)
 }
