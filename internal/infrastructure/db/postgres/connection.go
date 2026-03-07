@@ -2,8 +2,10 @@ package postgres
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5"
+
 	db "github.com/noellimx/go-ddd/internal/infrastructure/db/sqlc"
+
+	"github.com/jackc/pgx/v5"
 )
 
 func NewConnection(ctx context.Context, dsn string) (*pgx.Conn, error) {

@@ -42,6 +42,7 @@ func SetupTestDB(t *testing.T) *PostgresTestContainer {
 		testcontainers.WithWaitStrategy(
 			wait.ForLog("database system is ready to accept connections").
 				WithOccurrence(2),
+			wait.ForListeningPort("5432/tcp"),
 		),
 	)
 	require.NoError(t, err, "Failed to start postgres container")

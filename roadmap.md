@@ -1,6 +1,7 @@
 ## Scaffold
 
 - [ ] Copy deployment template from `train-data` repo
+- [ ] Restore tests
 
 
 ## Design
