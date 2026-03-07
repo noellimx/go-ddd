@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/labstack/echo/v4"
 	"github.com/sklinkert/go-ddd/internal/application/services"
-	postgres2 "github.com/sklinkert/go-ddd/internal/infrastructure/db/postgres"
+	"github.com/sklinkert/go-ddd/internal/infrastructure/db/postgres"
 	"github.com/sklinkert/go-ddd/internal/interface/api/rest"
-	"log"
 )
 
 func main() {
@@ -14,17 +15,17 @@ func main() {
 	port := ":8080"
 
 	ctx := context.Background()
-	conn, err := postgres2.NewConnection(ctx, dsn)
+	conn, err := postgres.NewConnection(ctx, dsn)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	defer conn.Close(ctx)
 
-	queries := postgres2.NewQueries(conn)
+	queries := postgres.NewQueries(conn)
 
-	productRepo := postgres2.NewSqlcProductRepository(queries)
-	sellerRepo := postgres2.NewSqlcSellerRepository(queries)
-	idempotencyRepo := postgres2.NewSqlcIdempotencyRepository(queries)
+	productRepo := postgres.NewSqlcProductRepository(queries)
+	sellerRepo := postgres.NewSqlcSellerRepository(queries)
+	idempotencyRepo := postgres.NewSqlcIdempotencyRepository(queries)
 
 	productService := services.NewProductService(productRepo, sellerRepo, idempotencyRepo)
 	sellerService := services.NewSellerService(sellerRepo, idempotencyRepo)
