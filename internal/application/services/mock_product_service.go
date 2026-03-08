@@ -1,12 +1,13 @@
-package rest_test
+package services
 
 import (
+	"time"
+
 	"github.com/noellimx/go-ddd/internal/application/command"
 	"github.com/noellimx/go-ddd/internal/application/mapper"
 	"github.com/noellimx/go-ddd/internal/application/query"
 	"github.com/noellimx/go-ddd/internal/domain/entities"
 	"github.com/stretchr/testify/mock"
-	"time"
 )
 
 type MockProductService struct {

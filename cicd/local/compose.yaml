@@ -1,0 +1,19 @@
+services:
+  db:
+    restart: always
+    image: postgres:18.3-alpine3.22
+    volumes:
+      - pg_data:/var/lib/postgresql/18
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - ${POSTGRES_PORT}:5432
+  migrate:
+    image: migrate/migrate
+    volumes:
+      - ${MIGRATION_PATH}:/migrations
+volumes:
+  pg_data:
+    name: "pg_data"
