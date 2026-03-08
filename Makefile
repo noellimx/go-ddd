@@ -47,10 +47,12 @@ setup:
 	$(COMPOSE_BIN) --env-file $(ENV_FILE) -f $(COMPOSE_FILE) up -d  --remove-orphans
 	$(MAKE) migrate
 
+
+# tear down all resources including volumes
 .PHONY: teardown
 teardown:
 	$(MAKE) validate
-	$(COMPOSE_BIN) -f $(COMPOSE_FILE) down
+	$(COMPOSE_BIN) -f $(COMPOSE_FILE) down -v
 
 COMPOSE_MIGRATE:=$(COMPOSE_BIN) -f $(COMPOSE_FILE) run --rm migrate -path=/migrations -database=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
 .PHONY: migrate
@@ -61,4 +63,4 @@ migrate:
 .PHONY: migrate-down
 migrate-down:
 	$(MAKE) validate
-	${COMPOSE_MIGRATE} down -v
+	${COMPOSE_MIGRATE} down -all

@@ -18,11 +18,24 @@
 
 ## Tech Stack Essentials
 
-- **Go 1.24** with idiomatic patterns and testify-powered tests.
-- **Echo v4** HTTP stack for REST endpoints.
+
+### Language
+
+- **Go 1.26** with idiomatic patterns and testify-powered tests.
+
+### Controller
+- **Echo v4** HTTP stack for REST endpoints. ❗❗ Removing
+
+
+### Database
 - **pgx/v5** and `sqlc` for type-safe PostgreSQL access.
 - **golang-migrate** handling SQL schema migrations
+
+### Test
+- **testify** framework for writing test, mocks and assertions
 - **Testcontainers** integration to provision disposable Postgres instances during tests.
+
+### Utilities
 - **google/uuid** helpers for deterministic ID generation inside the domain.
 
 ## Design Principles in Action
@@ -76,7 +89,7 @@ Domain-Driven Design connects implementation to an evolving model. `go-ddd` show
 - Always read the entity after write in the infrastructure layer.
   - This ensures that the data is written correctly, and we are never operating on stale data.
 - `find` vs `get`:
-  - `find` methods can return null or an empty list.
+  - `find` methods can return an empty list and is never nil.
   - `get` methods must return a value. If the value is not found, throw an error.
 - Deletion: Always use soft deletion. Create a `deleted_at` column in your database and set it to the current timestamp when deleting an entity. This way, you can always restore the entity if needed.
 
@@ -94,6 +107,8 @@ This separation enables different optimization strategies:
 - **Performance**: Complex queries don't impact write performance, and write locks don't block read operations
 
 ### Idempotency Keys
+❗❗ Removing
+
 Idempotency ensures that multiple identical requests have the same effect as a single request. This is crucial for handling network failures and retries in distributed systems. Implementation:
 - Each command accepts an optional `idempotency_key` in the request
 - The application layer checks if this key has been processed before
@@ -105,6 +120,9 @@ This prevents duplicate entities from being created when clients retry failed re
 ## Database Migrations
 
 This project uses [golang-migrate](https://github.com/golang-migrate/migrate) for database schema management. Migrations are stored in the `migrations/` directory with sequential version numbers.
+
+- `make migrate` migrate up
+- `make migrate-down` migrate down all
 
 ### Migration Files Structure
 ```
