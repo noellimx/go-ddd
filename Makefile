@@ -1,6 +1,5 @@
 ENVIRONMENT?=local
 
-
 CICD_FOLDER=./cicd/$(ENVIRONMENT)
 ENV_FILE := $(CICD_FOLDER)/.env
 COMPOSE_FILE := $(CICD_FOLDER)/compose.yaml
@@ -37,23 +36,29 @@ hello:
 	$(MAKE) validate
 	@echo $(ENV_FILE)
 
+.PHONY: colima-start
 colima-start:
 	@echo ${PWD}
 	colima start --network-address --mount ${PWD}:w
 
+.PHONY: setup
 setup:
 	$(MAKE) validate
-	$(COMPOSE_BIN) --env-file $(ENV_FILE) -f $(COMPOSE_FILE) up -d
+	$(COMPOSE_BIN) --env-file $(ENV_FILE) -f $(COMPOSE_FILE) up -d  --remove-orphans
+	$(MAKE) migrate
 
+.PHONY: teardown
 teardown:
 	$(MAKE) validate
 	$(COMPOSE_BIN) -f $(COMPOSE_FILE) down
 
 COMPOSE_MIGRATE:=$(COMPOSE_BIN) -f $(COMPOSE_FILE) run --rm migrate -path=/migrations -database=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+.PHONY: migrate
 migrate:
 	$(MAKE) validate
 	${COMPOSE_MIGRATE} up
 
+.PHONY: migrate-down
 migrate-down:
 	$(MAKE) validate
-	${COMPOSE_MIGRATE} down
+	${COMPOSE_MIGRATE} down -v
