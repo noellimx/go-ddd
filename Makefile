@@ -25,6 +25,9 @@ VALID_ENVIRONMENTS := local
 
 COMPOSE_BIN := $(shell which docker-compose || command -v docker-compose)
 
+COMPOSE_CMD := $(COMPOSE_BIN) --env-file $(ENV_FILE) -f $(COMPOSE_FILE) -v
+COMPOSE_MIGRATE:=$(COMPOSE_CMD) run --rm migrate -path=/migrations -database=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+
 # Function to check if ENVIRONMENT is valid
 define validate_env
   $(if $(filter $(ENVIRONMENT),$(VALID_ENVIRONMENTS)),,\
@@ -54,20 +57,38 @@ colima-start:
 	@echo ${PWD}
 	colima start --network-address --mount ${PWD}:w
 
-.PHONY: setup
-setup:
-	$(MAKE) validate
-	@echo "setup: APP_DOCKERFILE=${APP_DOCKERFILE}"
-	$(COMPOSE_BIN) --env-file $(ENV_FILE) -f $(COMPOSE_FILE) up -d  --remove-orphans
+.PHONY: docker-build
+docker-build:
+	$(MAKE) teardown
+	@echo "docker-build: APP_DOCKERFILE=${APP_DOCKERFILE}"
+	$(COMPOSE_CMD) build
+	$(MAKE) migrate
+	$(MAKE) mock-testify
+
+.PHONY: docker-run
+docker-run:
+	$(MAKE) docker-build
+	@echo "docker-run: APP_DOCKERFILE=${APP_DOCKERFILE}"
+	$(MAKE) db
 	$(MAKE) migrate
 
 # tear down all resources including volumes
 .PHONY: teardown
 teardown:
 	$(MAKE) validate
-	$(COMPOSE_BIN) -f $(COMPOSE_FILE) down -v
+	$(COMPOSE_BIN) -f $(COMPOSE_FILE) down -v --remove-orphans
 
-COMPOSE_MIGRATE:=$(COMPOSE_BIN) -f $(COMPOSE_FILE) run --rm migrate -path=/migrations -database=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+.PHONY: mock-testify
+mock-testify:
+	@echo "mock testify sta"
+	$(MAKE) validate
+	$(COMPOSE_CMD) run --rm mockery --config ./.mockery.yaml
+
+.PHONY: db
+db:
+	$(MAKE) validate
+	$(COMPOSE_CMD) run --rm db
+
 .PHONY: migrate
 migrate:
 	$(MAKE) validate

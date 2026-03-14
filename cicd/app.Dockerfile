@@ -8,7 +8,7 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 COPY . .
-RUN go build -o service ${MAIN_PATH}
+RUN go build -v -o service ${MAIN_PATH}
 
 FROM alpine:latest
 WORKDIR /app
