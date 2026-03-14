@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
@@ -25,7 +25,7 @@ const (
 // PostgresTestContainer manages a test database container
 type PostgresTestContainer struct {
 	Container testcontainers.Container
-	Conn      *pgx.Conn
+	Conn      *pgxpool.Pool
 	Queries   *db.Queries
 }
 
@@ -52,18 +52,21 @@ func SetupTestDB(t *testing.T) *PostgresTestContainer {
 	require.NoError(t, err, "Failed to get connection string")
 
 	// Connect to database
-	conn, err := pgx.Connect(ctx, dsn)
+	dbConfig, err := pgxpool.ParseConfig(dsn)
+	require.NoError(t, err, "Failed to ParseConfig")
+
+	dbConn, err := pgxpool.NewWithConfig(ctx, dbConfig)
 	require.NoError(t, err, "Failed to connect to test database")
 
 	// Apply schema
-	err = applySchema(ctx, conn)
+	err = applySchema(ctx, dbConn)
 	require.NoError(t, err, "Failed to apply database schema")
 
-	queries := db.New(conn)
+	queries := db.New(dbConn)
 
 	return &PostgresTestContainer{
 		Container: postgresContainer,
-		Conn:      conn,
+		Conn:      dbConn,
 		Queries:   queries,
 	}
 }
@@ -73,8 +76,7 @@ func (p *PostgresTestContainer) Close(t *testing.T) {
 	ctx := context.Background()
 
 	if p.Conn != nil {
-		err := p.Conn.Close(ctx)
-		require.NoError(t, err, "Failed to close database connection")
+		p.Conn.Close()
 	}
 
 	if p.Container != nil {
@@ -84,7 +86,7 @@ func (p *PostgresTestContainer) Close(t *testing.T) {
 }
 
 // applySchema reads and applies the SQL schema file
-func applySchema(ctx context.Context, conn *pgx.Conn) error {
+func applySchema(ctx context.Context, conn *pgxpool.Pool) error {
 	// Get current working directory and find project root
 	cwd, err := os.Getwd()
 	if err != nil {

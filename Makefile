@@ -1,14 +1,25 @@
 ENVIRONMENT?=local
 
 CICD_FOLDER=./cicd/$(ENVIRONMENT)
+DOCKER_FOLDER=./cicd
 ENV_FILE := $(CICD_FOLDER)/.env
-COMPOSE_FILE := $(CICD_FOLDER)/compose.yaml
 PWD := $(shell pwd)
 include $(ENV_FILE)
 
-MIGRATION_PATH=$(shell realpath $(MIGRATION_RELATIVE_PATH))
+COMPOSE_FILE := $(shell realpath $(CICD_FOLDER)/compose.yaml)
 
+MIGRATION_PATH := $(shell realpath $(MIGRATION_RELATIVE_PATH))
 export MIGRATION_PATH
+
+APP_MAIN_PATH := $(APP_MAIN_RELATIVE_PATH)
+export APP_MAIN_PATH
+
+APP_ROOT := $(shell realpath $(APP_RELATIVE_ROOT))
+export APP_ROOT
+
+APP_DOCKERFILE := $(DOCKER_FOLDER)/${APP_DOCKERFILE_NAME}.Dockerfile
+export APP_DOCKERFILE
+
 # List of allowed environments
 VALID_ENVIRONMENTS := local
 
@@ -27,7 +38,9 @@ endef
 
 .PHONY: validate
 validate:
+	@echo validating env...
 	$(call validate_env)
+	@echo validating compose...
 	$(call validate_compose)
 	@echo validation completed. ENVIRONMENT=$(ENVIRONMENT) COMPOSE_BIN=$(COMPOSE_BIN)
 
@@ -44,9 +57,9 @@ colima-start:
 .PHONY: setup
 setup:
 	$(MAKE) validate
+	@echo "setup: APP_DOCKERFILE=${APP_DOCKERFILE}"
 	$(COMPOSE_BIN) --env-file $(ENV_FILE) -f $(COMPOSE_FILE) up -d  --remove-orphans
 	$(MAKE) migrate
-
 
 # tear down all resources including volumes
 .PHONY: teardown

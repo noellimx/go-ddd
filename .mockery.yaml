@@ -1,0 +1,15 @@
+all: false
+dir: '{{.InterfaceDir}}'
+filename: '{{.StructName}}.go'
+force-file-write: true
+formatter: goimports
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: '{{.SrcPackageName}}'
+recursive: false
+template: testify
+packages:
+  github.com/noellimx/go-ddd:
+    config:
+      all: true
+      recursive: true

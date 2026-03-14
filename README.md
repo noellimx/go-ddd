@@ -18,14 +18,12 @@
 
 ## Tech Stack Essentials
 
-
 ### Language
 
 - **Go 1.26** with idiomatic patterns and testify-powered tests.
 
 ### Controller
 - **Echo v4** HTTP stack for REST endpoints. ❗❗ Removing
-
 
 ### Database
 - **pgx/v5** and `sqlc` for type-safe PostgreSQL access.
@@ -37,6 +35,11 @@
 
 ### Utilities
 - **google/uuid** helpers for deterministic ID generation inside the domain.
+
+### Local Development
+
+All local development are in test
+
 
 ## Design Principles in Action
 
@@ -121,43 +124,16 @@ This prevents duplicate entities from being created when clients retry failed re
 
 This project uses [golang-migrate](https://github.com/golang-migrate/migrate) for database schema management. Migrations are stored in the `migrations/` directory with sequential version numbers.
 
-- `make migrate` migrate up
-- `make migrate-down` migrate down all
-
 ### Migration Files Structure
 ```
 migrations/
 ├── 000001_initial_schema.up.sql    # Creates initial tables
 └── 000001_initial_schema.down.sql  # Rollback for initial schema
-```
 
 ### Running Migrations
 
-#### Using the built-in utility:
-```bash
-# Apply all pending migrations
-go run migrate.go -database-url "postgres://user:pass@localhost/db?sslmode=disable" -command up
-
-# Rollback last migration
-go run migrate.go -database-url "postgres://user:pass@localhost/db?sslmode=disable" -command down -steps 1
-
-# Check current version
-go run migrate.go -database-url "postgres://user:pass@localhost/db?sslmode=disable" -command version
-
-# Force to specific version (use with caution)
-go run migrate.go -database-url "postgres://user:pass@localhost/db?sslmode=disable" -command force -version 1
-```
-
-#### Using the CLI tool directly:
-```bash
-# Install the CLI tool
-go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-
-# Apply all pending migrations
-migrate -path migrations -database "postgres://user:pass@localhost/db?sslmode=disable" up
-
-# Rollback last migration
-migrate -path migrations -database "postgres://user:pass@localhost/db?sslmode=disable" down 1
+- `make migrate` migrate up
+- `make migrate-down` migrate down all
 ```
 
 ### Creating New Migrations

@@ -2,28 +2,40 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
+	"github.com/noellimx/go-ddd/cmd/config"
 	"github.com/noellimx/go-ddd/internal/application/services"
 	"github.com/noellimx/go-ddd/internal/infrastructure/db/postgres"
 	"github.com/noellimx/go-ddd/internal/interface/api/rest"
 )
 
 func main() {
-	dsn := "host=localhost user=marketplace password=marketplace dbname=marketplace port=5432 sslmode=disable"
-	port := ":8080"
-
 	ctx := context.Background()
-	conn, err := postgres.NewConnection(ctx, dsn)
-	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
-	}
-	defer conn.Close(ctx)
 
-	queries := postgres.NewQueries(conn)
+	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		AddSource:   true,
+		Level:       slog.LevelDebug,
+		ReplaceAttr: nil,
+	})
+
+	defaultLogger := slog.New(handler)
+	slog.SetDefault(defaultLogger)
+
+	defaultConfig, dbConn, err := Init(ctx)
+	if err != nil {
+		panic(err)
+	}
+	defaultLogger.Info("Starting http-service::main().")
+
+	queries := postgres.NewQueries(dbConn)
 
 	productRepo := postgres.NewSqlcProductRepository(queries)
 	sellerRepo := postgres.NewSqlcSellerRepository(queries)
@@ -59,7 +71,42 @@ func main() {
 	e := echo.New()
 	rest.NewSellerController(e, sellerService)
 
-	if err := e.Start(port); err != nil {
+	if err := e.Start(defaultConfig.Server.Address); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
+}
+
+const (
+	maxConnIdleTimeMinute = 5
+	minConn               = 2
+	maxConn               = 30
+)
+
+func Init(ctx context.Context) (*config.App, *pgxpool.Pool, error) {
+	appConfig, err := config.ReadDefaultConfig(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// DBInfo Connection Pool
+
+	dbConfig, err := pgxpool.ParseConfig(appConfig.ConnString)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	dbConfig.MaxConns = maxConn
+	dbConfig.MinConns = minConn
+	dbConfig.MaxConnIdleTime = maxConnIdleTimeMinute * time.Minute
+
+	// Create the pool
+	dbConnPool, err := pgxpool.NewWithConfig(ctx, dbConfig)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if dbConnPool == nil {
+		return nil, nil, errors.New("appConfig or dbConnPool is nil")
+	}
+	return &appConfig, dbConnPool, nil
 }

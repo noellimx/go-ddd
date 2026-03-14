@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/noellimx/go-ddd/internal/testhelpers"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewConnection(t *testing.T) {
@@ -15,30 +15,32 @@ func TestNewConnection(t *testing.T) {
 
 	// Test NewQueries with the existing connection (we can't easily get a new DSN)
 	queries := NewQueries(testDB.Conn)
-	assert.NotNil(t, queries)
+	require.NotNil(t, queries)
 
 	// Verify the connection is working by using the existing connection
 	ctx := context.Background()
 	err := testDB.Conn.Ping(ctx)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestNewConnection_InvalidDSN(t *testing.T) {
-	ctx := context.Background()
 
-	// Test with invalid DSN
-	conn, err := NewConnection(ctx, "invalid-dsn")
-	assert.Error(t, err)
-	assert.Nil(t, conn)
+	_, err := pgxpool.ParseConfig("invalid-dsn")
+	require.Error(t, err)
 }
 
 func TestNewConnection_UnreachableHost(t *testing.T) {
 	ctx := context.Background()
 
+	dbConfig, err := pgxpool.ParseConfig("invalid-dsn")
+	require.NoError(t, err, "Failed to ParseConfig")
+
+	dbConn, err := pgxpool.NewWithConfig(ctx, dbConfig)
+	require.NoError(t, err, "Failed to connect to test database NewWithConfig")
+
 	// Test with unreachable host
-	conn, err := NewConnection(ctx, "postgres://user:pass@unreachable-host:5432/db?connect_timeout=1")
-	assert.Error(t, err)
-	assert.Nil(t, conn)
+	require.Error(t, err)
+	require.Nil(t, dbConn)
 }
 
 func TestNewQueries(t *testing.T) {
@@ -47,19 +49,19 @@ func TestNewQueries(t *testing.T) {
 
 	// Test NewQueries with valid connection
 	queries := NewQueries(testDB.Conn)
-	assert.NotNil(t, queries)
+	require.NotNil(t, queries)
 
 	// Verify queries object is functional by running a simple query
 	ctx := context.Background()
 	_, err := queries.GetAllProducts(ctx)
-	assert.NoError(t, err) // Should not error even if empty
+	require.NoError(t, err) // Should not error even if empty
 }
 
 func TestNewQueries_WithNilConnection(t *testing.T) {
 	// Test NewQueries with nil connection
 	// Note: This will create a queries object but will panic when used
 	queries := NewQueries(nil)
-	assert.NotNil(t, queries)
+	require.NotNil(t, queries)
 
 	// Attempting to use it should panic (so we won't test that)
 	// This test just verifies that NewQueries can accept nil without immediately panicking
