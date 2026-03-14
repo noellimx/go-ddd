@@ -63,7 +63,7 @@ docker-build:
 	@echo "docker-build: APP_DOCKERFILE=${APP_DOCKERFILE}"
 	$(COMPOSE_CMD) build
 	$(MAKE) migrate
-	$(MAKE) mock-testify
+	$(MAKE) mockery
 
 .PHONY: docker-run
 docker-run:
@@ -78,11 +78,12 @@ teardown:
 	$(MAKE) validate
 	$(COMPOSE_BIN) -f $(COMPOSE_FILE) down -v --remove-orphans
 
-.PHONY: mock-testify
-mock-testify:
-	@echo "mock testify sta"
+.PHONY: mockery
+mockery:
+	@echo "mockery"
 	$(MAKE) validate
-	$(COMPOSE_CMD) run --rm mockery --config ./.mockery.yaml
+	$(COMPOSE_CMD) run --rm mockery --config ./.mockery.testify.yaml
+	$(COMPOSE_CMD) run --rm mockery --config ./.mockery.generic.yaml
 
 .PHONY: db
 db:

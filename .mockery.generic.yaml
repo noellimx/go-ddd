@@ -1,10 +1,10 @@
 all: false
 dir: '{{.InterfaceDir}}'
-filename: '{{.StructName}}.go'
+filename: 'mock{{.InterfaceName}}'
 force-file-write: true
 formatter: goimports
 log-level: info
-structname: '{{.Mock}}{{.InterfaceName}}'
+structname: 'Mock{{.InterfaceName}}'
 pkgname: '{{.SrcPackageName}}'
 recursive: false
 template: testify
